@@ -1,5 +1,4 @@
 {
-  "runtime": "nodejs18.x",
   "functions": {
     "api/index.js": {
       "memory": 1024,
