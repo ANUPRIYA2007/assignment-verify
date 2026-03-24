@@ -1,0 +1,26 @@
+{
+  "builds": [
+    {
+      "src": "client/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "command": "npm run build",
+        "distDir": "client/dist"
+      }
+    },
+    {
+      "src": "frontend.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "server/index.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "frontend.js"
+    }
+  ]
+}
