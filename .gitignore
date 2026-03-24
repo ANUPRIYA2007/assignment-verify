@@ -31,3 +31,6 @@ client/dist/
 server/node_modules/
 server/uploads/
 server/.env
+
+.vercel
+.env*.local

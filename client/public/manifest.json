@@ -1,0 +1,14 @@
+{
+  "name": "Assignment Verify",
+  "short_name": "Evalyn",
+  "description": "Online Assignment Submission and Evaluation System",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "theme_color": "#0F0F1A",
+  "background_color": "#ffffff"
+}
