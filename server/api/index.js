@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
-require('dotenv').config();
 
+// Load routes
 const authRoutes = require('../routes/authRoutes');
 const assignmentRoutes = require('../routes/assignmentRoutes');
 const submissionRoutes = require('../routes/submissionRoutes');
@@ -11,48 +11,34 @@ const teacherRoutes = require('../routes/teacherRoutes');
 
 const app = express();
 
-// Middleware - Update CORS to include Vercel frontend URLs
-const allowedOrigins = [
-    'http://localhost:5173',
-    'http://localhost:5174', 
-    'http://localhost:5175',
-    'http://localhost:3000',
-    'https://assignment-verify.vercel.app',
-    'https://evalyn-assignment-verify.vercel.app',
-    /^https:\/\/.*\.vercel\.app$/  // Allow all Vercel domains
-];
-
+// CORS Middleware
 app.use(cors({
-    origin: function(origin, callback) {
-        if (!origin) {
-            callback(null, true);
-            return;
-        }
-        const isAllowed = allowedOrigins.some(allowed => {
-            if (allowed instanceof RegExp) {
-                return allowed.test(origin);
-            }
-            return origin === allowed;
-        });
-        if (isAllowed) {
-            callback(null, true);
-        } else {
-            console.warn(`CORS blocked origin: ${origin}`);
-            callback(null, true);
-        }
-    },
-    credentials: true
+    origin: [
+        'http://localhost:5173',
+        'http://localhost:5174',
+        'http://localhost:5175',
+        'http://localhost:3000',
+        'https://assignment-verify.vercel.app',
+        'https://evalyn-assignment-verify.vercel.app'
+    ],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Health check
+// Health Check
 app.get('/api/health', (req, res) => {
-    res.json({ status: 'ok', message: 'Assignment Verify API is running.', timestamp: new Date().toISOString() });
+    res.status(200).json({ 
+        status: 'ok', 
+        message: 'Assignment Verify API is running',
+        timestamp: new Date().toISOString()
+    });
 });
 
-// Routes (use /api prefix for consistency)
+// Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/assignments', assignmentRoutes);
 app.use('/api/submissions', submissionRoutes);
@@ -60,19 +46,22 @@ app.use('/api/late-requests', lateRequestRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/teacher', teacherRoutes);
 
-// 404 handler
+// 404 Handler
 app.use((req, res) => {
-    res.status(404).json({ error: 'Route not found' });
+    res.status(404).json({ 
+        error: 'Route not found', 
+        path: req.path,
+        method: req.method 
+    });
 });
 
-// Error handling middleware
+// Error Handler
 app.use((err, req, res, next) => {
-    console.error('Server error:', err);
-    if (err.message && err.message.includes('Invalid file type')) {
-        return res.status(400).json({ error: err.message });
-    }
-    res.status(500).json({ error: 'Internal server error.' });
+    console.error('Error:', err.message, err.stack);
+    res.status(500).json({ 
+        error: 'Internal server error',
+        message: err.message
+    });
 });
 
-// Export for Vercel
 module.exports = app;
