@@ -38,7 +38,7 @@ app.use(cors({
             callback(null, true);
         } else {
             console.warn(`CORS blocked origin: ${origin}`);
-            callback(null, true); // Allow for now for debugging
+            callback(null, true);
         }
     },
     credentials: true
@@ -47,18 +47,18 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Health check - Vercel routes to /api/... when file is in api/ directory
-app.get('/health', (req, res) => {
+// Health check
+app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', message: 'Assignment Verify API is running.', timestamp: new Date().toISOString() });
 });
 
-// Routes (Vercel already adds /api prefix via file location)
-app.use('/auth', authRoutes);
-app.use('/assignments', assignmentRoutes);
-app.use('/submissions', submissionRoutes);
-app.use('/late-requests', lateRequestRoutes);
-app.use('/admin', adminRoutes);
-app.use('/teacher', teacherRoutes);
+// Routes (use /api prefix for consistency)
+app.use('/api/auth', authRoutes);
+app.use('/api/assignments', assignmentRoutes);
+app.use('/api/submissions', submissionRoutes);
+app.use('/api/late-requests', lateRequestRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/teacher', teacherRoutes);
 
 // 404 handler
 app.use((req, res) => {
@@ -74,5 +74,5 @@ app.use((err, req, res, next) => {
     res.status(500).json({ error: 'Internal server error.' });
 });
 
-// Export for Vercel serverless and local use
+// Export for Vercel
 module.exports = app;
