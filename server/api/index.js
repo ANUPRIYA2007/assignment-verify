@@ -48,17 +48,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Health check
-app.get('/api/health', (req, res) => {
+app.get('/health', (req, res) => {
     res.json({ status: 'ok', message: 'Assignment Verify API is running.', timestamp: new Date().toISOString() });
 });
 
-// Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/assignments', assignmentRoutes);
-app.use('/api/submissions', submissionRoutes);
-app.use('/api/late-requests', lateRequestRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/teacher', teacherRoutes);
+// Routes (don't add /api prefix - Vercel serverless already handles it via api/index.js path)
+app.use('/auth', authRoutes);
+app.use('/assignments', assignmentRoutes);
+app.use('/submissions', submissionRoutes);
+app.use('/late-requests', lateRequestRoutes);
+app.use('/admin', adminRoutes);
+app.use('/teacher', teacherRoutes);
 
 // 404 handler
 app.use((req, res) => {
