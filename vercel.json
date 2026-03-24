@@ -1,15 +1,7 @@
 {
   "projectSettings": {
-    "rootDirectory": "client"
-  },
-  "buildCommand": "npm run build",
-  "outputDirectory": "client/dist",
-  "cleanUrls": true,
-  "trailingSlash": false,
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
-  ]
+    "rootDirectory": "client",
+    "buildCommand": "npm run build",
+    "outputDirectory": "dist"
+  }
 }
