@@ -78,10 +78,17 @@ app.use((req, res) => {
     res.status(404).json({ error: 'Route not found.' });
 });
 
-app.listen(PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
-    console.log(`📦 Supabase URL: ${process.env.SUPABASE_URL}`);
-    startResultScheduler();
-});
+// Only listen locally, not in Vercel serverless
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`🚀 Server running on http://localhost:${PORT}`);
+        console.log(`📦 Supabase URL: ${process.env.SUPABASE_URL}`);
+        try {
+            startResultScheduler();
+        } catch (err) {
+            console.error('Failed to start result scheduler:', err);
+        }
+    });
+}
 
 module.exports = app;
