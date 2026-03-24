@@ -11,17 +11,36 @@ const teacherRoutes = require('../routes/teacherRoutes');
 
 const app = express();
 
-// Middleware - Update CORS to include Vercel frontend URL
+// Middleware - Update CORS to include Vercel frontend URLs
 const allowedOrigins = [
     'http://localhost:5173',
     'http://localhost:5174', 
     'http://localhost:5175',
     'http://localhost:3000',
-    'https://evalyn-assignment-verify.vercel.app'
+    'https://assignment-verify.vercel.app',
+    'https://evalyn-assignment-verify.vercel.app',
+    /^https:\/\/.*\.vercel\.app$/  // Allow all Vercel domains
 ];
 
 app.use(cors({
-    origin: allowedOrigins,
+    origin: function(origin, callback) {
+        if (!origin) {
+            callback(null, true);
+            return;
+        }
+        const isAllowed = allowedOrigins.some(allowed => {
+            if (allowed instanceof RegExp) {
+                return allowed.test(origin);
+            }
+            return origin === allowed;
+        });
+        if (isAllowed) {
+            callback(null, true);
+        } else {
+            console.warn(`CORS blocked origin: ${origin}`);
+            callback(null, true); // Allow for now for debugging
+        }
+    },
     credentials: true
 }));
 
