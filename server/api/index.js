@@ -47,12 +47,12 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Health check
+// Health check - Vercel routes to /api/... when file is in api/ directory
 app.get('/health', (req, res) => {
     res.json({ status: 'ok', message: 'Assignment Verify API is running.', timestamp: new Date().toISOString() });
 });
 
-// Routes (don't add /api prefix - Vercel serverless already handles it via api/index.js path)
+// Routes (Vercel already adds /api prefix via file location)
 app.use('/auth', authRoutes);
 app.use('/assignments', assignmentRoutes);
 app.use('/submissions', submissionRoutes);
@@ -74,4 +74,5 @@ app.use((err, req, res, next) => {
     res.status(500).json({ error: 'Internal server error.' });
 });
 
+// Export for Vercel serverless and local use
 module.exports = app;
